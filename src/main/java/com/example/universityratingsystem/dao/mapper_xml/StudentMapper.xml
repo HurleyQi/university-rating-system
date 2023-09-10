@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.universityratingsystem.dao.interfaces.StudentMapper">
+    <resultMap id="RatingResultMap" type="com.example.universityratingsystem.model.Rating">
+        <result property="ratingId" column="rating_id"/>
+        <result property="question" column="question"/>
+        <result property="rating" column="rating"/>
+        <result property="studentId" column="student_id"/>
+        <result property="facultyId" column="faculty_id"/>
+        <result property="courseId" column="course_id"/>
+    </resultMap>
+
+    <resultMap id="CourseResultMap" type="com.example.universityratingsystem.model.Course">
+        <result property="name" column="course_name"/>
+        <result property="courseId" column="course_id"/>
+        <result property="facultyId" column="faculty_id"/>
+        <result property="department" column="department"/>
+        <result property="college" column="college"/>
+        <result property="location" column="location"/>
+        <result property="timeOfCourse" column="time_of_course"/>
+        <result property="hours" column="hours"/>
+    </resultMap>
+
+    <select id="getAllCoursesBySemester" resultMap="CourseResultMap">
+        SELECT * 
+        FROM course 
+        INNER JOIN student_schedule
+        ON course.course_id = student_schedule.course_id
+        WHERE student_schedule.studentId = #{studentId} AND student_schedule.semester = #{semester}
+    </select>
+
+    <select id="searchRating" resultMap="RatingResultMap">
+        SELECT * 
+        ratings WHERE
+        rating_id = #{ratingId}
+    </select>
+
+    <insert id="insertRating" parameterType="universityratingsystem.model.Rating">
+        INSERT INTO ratings (question, rating, student_id, faculty_id, course_id)
+        VALUES (#{question}, #{rating}, #{studentId}, #{facultyId}, #{courseId})
+    </insert>
+
+    <update id="editRating" parameterType="universityratingsystem.model.Rating">
+        UPDATE ratings SET 
+            rating_id = #{ratingId}, 
+            question = #{question},
+            rating = #{rating},
+            student_id = #{studentId},
+            faculty_id = #{facultyId},
+            course_id = #{courseId}
+        WHERE rating_id = #{ratingId}
+    </update>
+
+    <delete id="deleteRating" parameterType="String">
+        DELETE FROM ratings WHERE rating_id = #{ratingId}
+    </delete>
+
+
+</mapper>
